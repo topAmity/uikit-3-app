@@ -181,19 +181,34 @@ export default function App() {
   }, [uikitApiKey]);
   return (
 
-
+    <div>
+      {(uikitApiKey && !loading) ?
         <AmityUiKitProvider
           key={userId}
-          apiKey={apiKey as string}
+          apiKey={uikitApiKey as string}
           userId={userId}
           displayName={userId}
-          apiRegion="sg"
+          apiRegion="eu"
           theme={{ palette: { primary: primary } }}
         >
           <AmityUiKitSocial />
         </AmityUiKitProvider>
+        :
+        <div className="loading-container">
+          <div>
 
+            <HashLoader
+              color={primary}
+              loading={loading}
+              size={60}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          </div>
+        </div>
 
+      }
+    </div>
 
 
   );
