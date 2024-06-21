@@ -1,4 +1,4 @@
-import { AmityUiKitProvider, AmityUiKitSocial } from "@amityco/ui-kit-open-source";
+import { AmityUiKitProvider, AmityUiKitSocial } from "@amityco/ui-kit";
 import { useEffect, useState } from "react";
 import { HashLoader } from "react-spinners";
 import './App.css'
@@ -11,7 +11,7 @@ const REACT_APP_API_KEY_SPORT = "b0e9be093adef336183f8a4a53014088d15ad8b0ec3d392
 const REACT_APP_API_KEY_FITNESS = "b0e9be093adef2641f35894f5b0f158bd50f84e2ee613e24"
 const REACT_APP_API_KEY_FINANCIAL = "b0e9be093adef06c48378a4f520a128ad90888e5e9313928"
 const REACT_APP_API_KEY_TRAVEL = "b0e9be093adef66d4c3f8c1d065b408e840bdde2e8666f79"
-// const REACT_APP_API_KEY_DEFAULT = "b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f"
+const REACT_APP_API_KEY_DEFAULT = "b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f"
 const REACT_APP_API_KEY_AUTOMOTIVE = "b0eae80c32dba4611e378b14505b1189d05b89b7bc676724"
 
 export default function App() {
@@ -20,6 +20,7 @@ export default function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [primary, setPrimary] = useState<string>('#06be8b')
 
+    console.log('Welcome to ASC Web V3')
   const chooseCategoryApiKey = (category: string) => {
     switch (category) {
       case "travel":
@@ -52,7 +53,6 @@ export default function App() {
     const primary = urlParams.get("primary");
     const userId = urlParams.get("userId");
     const category = urlParams.get("category");
-    console.log('category: ', category);
 
     if (category) {
       chooseCategoryApiKey(category);
@@ -181,34 +181,19 @@ export default function App() {
   }, [uikitApiKey]);
   return (
 
-    <div>
-      {(uikitApiKey && !loading) ?
+
         <AmityUiKitProvider
           key={userId}
-          apiKey={uikitApiKey as string}
+          apiKey={apiKey as string}
           userId={userId}
           displayName={userId}
-          apiRegion="eu"
+          apiRegion="sg"
           theme={{ palette: { primary: primary } }}
         >
           <AmityUiKitSocial />
         </AmityUiKitProvider>
-        :
-        <div className="loading-container">
-          <div>
 
-            <HashLoader
-              color={primary}
-              loading={loading}
-              size={60}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-          </div>
-        </div>
 
-      }
-    </div>
 
 
   );

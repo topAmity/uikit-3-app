@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@amityco/ts-sdk": "^6.25.2",
+    "@amityco/ui-kit": "4.0.0-alpha.30d886a.0",
     "@amityco/ui-kit-open-source": "./amityco-ui-kit-open-source-3.6.0.tgz",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
