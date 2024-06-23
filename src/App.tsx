@@ -1,10 +1,10 @@
 import { AmityUiKitProvider, AmityUiKitSocial } from "@amityco/ui-kit";
 import { useEffect, useState } from "react";
-import { HashLoader } from "react-spinners";
 import './App.css'
+import { Hourglass } from "react-loader-spinner";
+import { color } from "framer-motion";
 
-const userId = "topAmity";
-const apiKey = "b3babb0b3a89f4341d31dc1a01091edcd70f8de7b23d697f";
+// 
 
 const REACT_APP_API_KEY_GAMING = "b0e9be093adfa562183f8a4a5301168fd15dd8b0ec376c2f"
 const REACT_APP_API_KEY_SPORT = "b0e9be093adef336183f8a4a53014088d15ad8b0ec3d3924"
@@ -19,6 +19,10 @@ export default function App() {
   const [uikitApiKey, setUIKitApiKey] = useState<string>()
   const [loading, setLoading] = useState<boolean>(true);
   const [primary, setPrimary] = useState<string>('#06be8b')
+  const [userId, setUserId] = useState<string>("")
+  const [displayName, setDisplayName] = useState<string>("")
+
+  const [delayLoading, setDelayLoading] = useState<boolean>(true)
 
   console.log('Welcome to ASC Web V3')
   const chooseCategoryApiKey = (category: string) => {
@@ -57,7 +61,9 @@ export default function App() {
     if (category) {
       chooseCategoryApiKey(category);
     }
-    // if (primary) setPrimary("#" + primary)
+    if (displayName) setDisplayName(displayName)
+    if (userId) setUserId(userId)
+    if (primary) setPrimary("#" + primary)
 
 
   }, [])
@@ -93,7 +99,7 @@ export default function App() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": apiKey,
+            "x-api-key": uikitApiKey as string,
             Authorization: `Bearer ${accessToken}`,
           },
         }
@@ -108,6 +114,9 @@ export default function App() {
       console.log('myCommunitites: ', myCommunitites);
       if (myCommunitites.communities.length > 0) {
         setLoading(false);
+        setTimeout(() => {
+          setDelayLoading(false)
+        }, 2000);
         console.log('not call join')
       } else {
         console.log('not call join')
@@ -117,7 +126,7 @@ export default function App() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "x-api-key": apiKey,
+              "x-api-key": uikitApiKey as string,
               Authorization: `Bearer ${accessToken}`,
             },
           }
@@ -159,7 +168,7 @@ export default function App() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": apiKey,
+            "x-api-key": uikitApiKey as string,
             Authorization: `Bearer ${accessToken}`,
           },
         }
@@ -208,32 +217,46 @@ export default function App() {
   return (
 
     <div>
-      {(uikitApiKey && !loading) ?
+      <div className={`${!delayLoading ? '' : 'none'}`}>
+      {(uikitApiKey && userId && !loading) &&
         <AmityUiKitProvider
           key={userId}
           apiKey={uikitApiKey as string}
           userId={userId}
-          displayName={userId}
+          displayName={displayName}
           apiRegion="eu"
           theme={{ palette: { primary: primary } }}
         >
-          <AmityUiKitSocial />
-        </AmityUiKitProvider>
-        :
-        <div className="loading-container">
-          <div>
+          {delayLoading ?
+            <div className="loading-container">
+              <div>
+                <Hourglass
+                  visible={true}
+                  height="80"
+                  width="80"
+                  ariaLabel="hourglass-loading"
+                  colors={['#06be8b', '#fed500']}
+                />
+              </div>
+            </div> :
+            <AmityUiKitSocial />
+          }
 
-            <HashLoader
-              color={primary}
-              loading={loading}
-              size={60}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-          </div>
-        </div>
+        </AmityUiKitProvider>
 
       }
+      </div>
+      <div className={`loading-container ${delayLoading ? '' : 'none'}`}>
+        <div>
+          <Hourglass
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="hourglass-loading"
+            colors={['#06be8b', '#fed500']}
+          />
+        </div>
+      </div>
     </div>
 
 
