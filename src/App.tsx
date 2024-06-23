@@ -20,7 +20,7 @@ export default function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [primary, setPrimary] = useState<string>('#06be8b')
 
-    console.log('Welcome to ASC Web V3')
+  console.log('Welcome to ASC Web V3')
   const chooseCategoryApiKey = (category: string) => {
     switch (category) {
       case "travel":
@@ -57,7 +57,7 @@ export default function App() {
     if (category) {
       chooseCategoryApiKey(category);
     }
-    if (primary) setPrimary("#" + primary)
+    // if (primary) setPrimary("#" + primary)
 
 
   }, [])
@@ -106,10 +106,10 @@ export default function App() {
 
       const myCommunitites = await response.json();
       console.log('myCommunitites: ', myCommunitites);
-      if(myCommunitites.communities.length>0){
+      if (myCommunitites.communities.length > 0) {
         setLoading(false);
         console.log('not call join')
-      }else{
+      } else {
         console.log('not call join')
         const response = await fetch(
           "https://apix.eu.amity.co/api/v3/communities?isDeleted=false",
@@ -125,7 +125,7 @@ export default function App() {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-  
+
         const data = await response.json();
         const communityIds = data.communities.map(
           (item: { communityId: string }) => item.communityId
@@ -133,16 +133,16 @@ export default function App() {
         const joinPromises = communityIds.map((communityId: string) =>
           joinUserToCommunity(communityId, accessToken)
         );
-  
+
         const results = await Promise.all(joinPromises);
         if (results.length > 0) {
           setTimeout(() => {
             setLoading(false);
           }, 200);
-  
+
         }
       }
-   
+
     } catch (error) {
       console.error("Error:", error);
     }
@@ -179,6 +179,32 @@ export default function App() {
   useEffect(() => {
     if (uikitApiKey) autoJoinUser();
   }, [uikitApiKey]);
+
+  useEffect(() => {
+    const handleMessage = (event: { data: { payload: any } }) => {
+      console.log("Message event received:", event);
+      // if (event.origin !== 'http://localhost:3000') { // Match this to the parent origin
+      //   console.log('Origin mismatch, message ignored.');
+      //   return;
+      // }
+      const data = event.data.payload;
+
+      if (data?.type === "saveTheme") {
+        setPrimary(data.value.primary)
+      }
+      console.log(
+        "Message received from parent playground:",
+        event.data.payload
+      );
+    };
+
+    window.addEventListener("message", handleMessage, false);
+
+    return () => {
+      window.removeEventListener("message", handleMessage, false);
+    };
+  }, []);
+
   return (
 
     <div>
